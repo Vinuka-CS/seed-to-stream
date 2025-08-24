@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { TMDBItem, searchMulti, getDisplayTitle, getReleaseYear, getImageUrl } from '@/utils/tmdb';
+import { TMDBItem, searchMulti, getDisplayTitle, getReleaseYear, getImageUrl, getDetails } from '@/utils/tmdb';
 
 interface SearchBarProps {
   onSeedSelect: (item: TMDBItem) => void;
@@ -38,8 +38,24 @@ export const SearchBar = ({ onSeedSelect, selectedSeed }: SearchBarProps) => {
     return () => clearTimeout(searchDebounced);
   }, [query]);
 
-  const handleSeedSelect = (item: TMDBItem) => {
-    onSeedSelect(item);
+  const handleSeedSelect = async (item: TMDBItem) => {
+    try {
+      // Fetch additional details including tagline for better scoring
+      const details = await getDetails(item.id, item.media_type);
+      if (details) {
+        const enhancedItem: TMDBItem = {
+          ...item,
+          tagline: details.tagline || undefined
+        };
+        onSeedSelect(enhancedItem);
+      } else {
+        onSeedSelect(item);
+      }
+    } catch (error) {
+      console.error('Error fetching details:', error);
+      onSeedSelect(item);
+    }
+    
     setQuery('');
     setResults([]);
     setShowResults(false);
@@ -66,6 +82,11 @@ export const SearchBar = ({ onSeedSelect, selectedSeed }: SearchBarProps) => {
               <p className="text-sm text-muted-foreground">
                 {selectedSeed.media_type === 'movie' ? 'Movie' : 'TV Show'} • {getReleaseYear(selectedSeed)} • ⭐ {selectedSeed.vote_average.toFixed(1)}
               </p>
+              {selectedSeed.tagline && (
+                <p className="text-sm text-muted-foreground italic mt-1">
+                  "{selectedSeed.tagline}"
+                </p>
+              )}
             </div>
             <Button
               variant="ghost"
