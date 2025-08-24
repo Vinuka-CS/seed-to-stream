@@ -110,17 +110,15 @@ export const getGenres = async (mediaType: 'movie' | 'tv'): Promise<TMDBGenre[]>
 
 // Score and sort recommendations
 export const scoreRecommendations = (seedItem: TMDBItem, recommendations: TMDBItem[], genres: TMDBGenre[]): ScoredRecommendation[] => {
-  const seedYear = new Date(seedItem.release_date || seedItem.first_air_date || '').getFullYear();
   const seedGenres = seedItem.genre_ids;
-  const seedRating = seedItem.vote_average;
   
   return recommendations.map(item => {
     let score = 0;
     const justificationParts: string[] = [];
     
-    // 1. Genre overlap (0-40 points)
+    // 1. Genre overlap (0-60 points) - increased weight
     const commonGenres = item.genre_ids.filter(genreId => seedGenres.includes(genreId));
-    const genreScore = (commonGenres.length / Math.max(seedGenres.length, 1)) * 40;
+    const genreScore = (commonGenres.length / Math.max(seedGenres.length, 1)) * 60;
     score += genreScore;
     
     if (commonGenres.length > 0) {
@@ -128,17 +126,7 @@ export const scoreRecommendations = (seedItem: TMDBItem, recommendations: TMDBIt
       justificationParts.push(`Shares ${genreNames.slice(0, 2).join(' and ')} themes`);
     }
     
-    // 2. Release year proximity (0-25 points)
-    const itemYear = new Date(item.release_date || item.first_air_date || '').getFullYear();
-    const yearDiff = Math.abs(seedYear - itemYear);
-    const yearScore = Math.max(0, 25 - yearDiff);
-    score += yearScore;
-    
-    if (yearDiff <= 5) {
-      justificationParts.push(`Released around same time (${itemYear})`);
-    }
-    
-    // 3. TMDB rating (0-25 points)
+    // 2. TMDB rating (0-25 points)
     const ratingScore = (item.vote_average / 10) * 25;
     score += ratingScore;
     
@@ -146,11 +134,11 @@ export const scoreRecommendations = (seedItem: TMDBItem, recommendations: TMDBIt
       justificationParts.push(`High TMDB rating (${item.vote_average.toFixed(1)})`);
     }
     
-    // 4. Description similarity (basic keyword matching) (0-10 points)
+    // 3. Description similarity (basic keyword matching) (0-15 points) - increased weight
     const seedWords = seedItem.overview.toLowerCase().split(/\W+/);
     const itemWords = item.overview.toLowerCase().split(/\W+/);
     const commonWords = seedWords.filter(word => itemWords.includes(word) && word.length > 3);
-    const descScore = Math.min(10, commonWords.length * 2);
+    const descScore = Math.min(15, commonWords.length * 3);
     score += descScore;
     
     if (commonWords.length > 2) {
