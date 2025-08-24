@@ -2,41 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Cinematic Movie App Design System - All colors MUST be HSL */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
+    /* Core backgrounds - deep cinematic theme */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    /* Card surfaces */
+    --card: 240 10% 8%;
+    --card-foreground: 0 0% 98%;
+    
+    /* Popover surfaces */
+    --popover: 240 10% 8%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* Primary - rich gold accent */
+    --primary: 45 100% 70%;
+    --primary-foreground: 240 10% 3.9%;
+    
+    /* Secondary - muted purple */
+    --secondary: 240 10% 12%;
+    --secondary-foreground: 0 0% 98%;
+    
+    /* Muted elements */
+    --muted: 240 10% 12%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    /* Accent - bright gold */
+    --accent: 45 100% 70%;
+    --accent-foreground: 240 10% 3.9%;
+    
+    /* Destructive */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Borders and inputs */
+    --border: 240 10% 18%;
+    --input: 240 10% 18%;
+    --ring: 45 100% 70%;
+    
+    /* Custom cinema tokens */
+    --cinema-blue: 240 100% 25%;
+    --cinema-purple: 280 100% 35%;
+    --cinema-gold: 45 100% 70%;
+    --cinema-gold-dark: 45 100% 55%;
+    --cinema-card-hover: 240 10% 12%;
+    --cinema-glass: 240 10% 8% / 0.8;
+    
+    /* Gradients */
+    --gradient-cinema: linear-gradient(135deg, hsl(var(--cinema-blue)), hsl(var(--cinema-purple)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--cinema-gold)), hsl(var(--cinema-gold-dark)));
+    --gradient-dark: linear-gradient(180deg, hsl(var(--background)), hsl(240 10% 2%));
+    
+    /* Shadows */
+    --shadow-card: 0 10px 30px -10px hsl(240 10% 0% / 0.3);
+    --shadow-glow: 0 0 40px hsl(var(--cinema-gold) / 0.2);
+    --shadow-elevated: 0 20px 50px -20px hsl(240 10% 0% / 0.5);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-card: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +129,60 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground min-h-screen;
+    background: var(--gradient-dark);
+  }
+}
+
+@layer components {
+  /* Cinema Card Component */
+  .cinema-card {
+    @apply bg-card border border-border rounded-lg overflow-hidden;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-card);
+  }
+  
+  .cinema-card:hover {
+    @apply border-primary/20;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elevated);
+  }
+  
+  /* Glass effect for overlays */
+  .cinema-glass {
+    background: var(--cinema-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid hsl(var(--border));
+  }
+  
+  /* Star rating component */
+  .star-rating {
+    @apply flex gap-1;
+  }
+  
+  .star {
+    @apply cursor-pointer transition-colors;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .star.active {
+    color: hsl(var(--primary));
+  }
+  
+  .star:hover {
+    color: hsl(var(--primary));
+  }
+  
+  /* Loading animation */
+  .loading-pulse {
+    @apply animate-pulse bg-muted rounded;
+  }
+  
+  /* Gradient text effect */
+  .gradient-text {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

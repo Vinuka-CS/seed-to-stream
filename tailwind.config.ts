@@ -61,7 +61,29 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				cinema: {
+					blue: 'hsl(var(--cinema-blue))',
+					purple: 'hsl(var(--cinema-purple))',
+					gold: 'hsl(var(--cinema-gold))',
+					'gold-dark': 'hsl(var(--cinema-gold-dark))',
+					'card-hover': 'hsl(var(--cinema-card-hover))',
+					glass: 'hsl(var(--cinema-glass))'
 				}
+			},
+			backgroundImage: {
+				'gradient-cinema': 'var(--gradient-cinema)',
+				'gradient-gold': 'var(--gradient-gold)',
+				'gradient-dark': 'var(--gradient-dark)'
+			},
+			boxShadow: {
+				'card': 'var(--shadow-card)',
+				'glow': 'var(--shadow-glow)',
+				'elevated': 'var(--shadow-elevated)'
+			},
+			transitionProperty: {
+				'smooth': 'var(--transition-smooth)',
+				'card': 'var(--transition-card)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
