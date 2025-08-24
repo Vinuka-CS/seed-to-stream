@@ -136,10 +136,6 @@ export const RecommendationCard = ({
                       <span>Tone & Atmosphere:</span>
                       <span className="font-mono">{scoredItem.scoreBreakdown.toneScore}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Era Similarity:</span>
-                      <span className="font-mono">{scoredItem.scoreBreakdown.eraScore}</span>
-                    </div>
                     <div className="border-t pt-1 mt-2">
                       <div className="flex justify-between font-semibold">
                         <span>Total Score:</span>
@@ -157,7 +153,7 @@ export const RecommendationCard = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="text-sm text-muted-foreground">TMDB:</span>
-            <StarRating rating={item.vote_average / 2} readonly />
+            <StarRating rating={item.vote_average} readonly maxRating={10} />
             <span className="text-sm text-muted-foreground">
               {item.vote_average.toFixed(1)}
             </span>
@@ -174,6 +170,7 @@ export const RecommendationCard = ({
             rating={userRating} 
             onChange={handleRatingChange}
             size="sm"
+            maxRating={10}
           />
         </div>
 

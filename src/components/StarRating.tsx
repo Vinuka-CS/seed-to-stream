@@ -6,6 +6,7 @@ interface StarRatingProps {
   readonly?: boolean;
   size?: 'sm' | 'md' | 'lg';
   showValue?: boolean;
+  maxRating?: number; // Allow custom max rating (default 10)
 }
 
 export const StarRating = ({ 
@@ -13,7 +14,8 @@ export const StarRating = ({
   onRatingChange, 
   readonly = false, 
   size = 'md',
-  showValue = false 
+  showValue = false,
+  maxRating = 10
 }: StarRatingProps) => {
   const sizeClasses = {
     sm: 'h-3 w-3',
@@ -27,23 +29,27 @@ export const StarRating = ({
     }
   };
 
+  // Create array of stars based on maxRating
+  const stars = Array.from({ length: maxRating }, (_, i) => i + 1);
+
   return (
     <div className="flex items-center gap-1">
-      <div className="star-rating">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((star) => (
+      <div className="flex items-center gap-0.5">
+        {stars.map((star) => (
           <Star
             key={star}
-            className={`star ${sizeClasses[size]} ${
-              star <= rating ? 'active' : ''
-            } ${readonly ? 'cursor-default' : 'cursor-pointer'}`}
-            fill={star <= rating ? 'currentColor' : 'none'}
+            className={`${sizeClasses[size]} transition-colors ${
+              star <= rating 
+                ? 'text-yellow-500 fill-yellow-500' 
+                : 'text-gray-300 fill-gray-100'
+            } ${readonly ? 'cursor-default' : 'cursor-pointer hover:text-yellow-400'}`}
             onClick={() => handleStarClick(star)}
           />
         ))}
       </div>
       {showValue && (
         <span className="text-sm text-muted-foreground ml-1">
-          {rating}/10
+          {rating}/{maxRating}
         </span>
       )}
     </div>
